@@ -1,0 +1,24 @@
+# 示例代理列表
+# 格式: [http|https|socks4|socks5]://[username:password@]host:port
+# 注意: 这些是示例代理，实际使用时请替换为您自己的代理服务器
+
+# HTTP代理
+http://127.0.0.1:8080
+http://proxy1.example.com:8080
+http://user:pass@proxy2.example.com:8080
+
+# HTTPS代理
+https://secure-proxy.example.com:8443
+
+# SOCKS4代理
+socks4://127.0.0.1:1080
+socks4://socks-proxy1.example.com:1080
+
+# SOCKS5代理
+socks5://127.0.0.1:1080
+socks5://socks-proxy2.example.com:1080
+socks5://user:pass@socks-proxy3.example.com:1080
+
+# 无类型前缀的代理 (将按照--proxy-type参数指定的类型处理)
+192.168.1.1:3128
+proxy.example.org:8888 
