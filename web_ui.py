@@ -32,7 +32,7 @@ os.makedirs('uploads', exist_ok=True)
 os.makedirs('results', exist_ok=True)
 
 # 定义表单类
-class BruteforceForm(FlaskForm):
+class RequestTestForm(FlaskForm):
     # 基本参数
     url = StringField('目标URL', validators=[DataRequired(), URL()])
     method = SelectField('请求方式', 
@@ -43,10 +43,10 @@ class BruteforceForm(FlaskForm):
     headers = TextAreaField('请求头 (每行一个 key=value)')
     params = TextAreaField('URL参数 (每行一个 key=value)')
     data = TextAreaField('请求数据 (JSON或表单数据)')
-    payload_file = FileField('载荷文件 (每行一个值)')
-    payload_placeholder = StringField('载荷占位符', default='PAYLOAD_PLACEHOLDER')
+    payload_file = FileField('测试数据文件 (每行一个值)')
+    payload_placeholder = StringField('数据占位符', default='PAYLOAD_PLACEHOLDER')
     
-    # IP伪装参数
+    # 网络设置参数
     use_proxy = BooleanField('启用代理服务器')
     proxy_mode = StringField('代理模式')
     proxy = StringField('代理服务器地址')
@@ -60,12 +60,12 @@ class BruteforceForm(FlaskForm):
     ua_mode = StringField('User-Agent模式')
     user_agents_file = FileField('User-Agent列表文件')
     
-    # IP地址伪装
-    spoof_ip = BooleanField('伪造源IP地址')
-    spoof_ip_address = StringField('伪造IP地址')
+    # IP地址设置
+    spoof_ip = BooleanField('自定义源IP地址')
+    spoof_ip_address = StringField('自定义IP地址')
     random_ip = BooleanField('随机生成IP')
     
-    # 高级参数
+    # 性能优化参数
     use_async_mode = BooleanField('使用异步高性能模式')
     concurrency = IntegerField('并发连接数', validators=[NumberRange(min=1, max=5000)], default=100)
     threads = IntegerField('并发线程数', validators=[NumberRange(min=1, max=100)], default=10)
@@ -108,11 +108,11 @@ def index():
     # 当用户访问首页时，确保任务状态是正确的
     if not task_status.get('is_running', False):
         reset_task_status()
-    form = BruteforceForm()
+    form = RequestTestForm()
     return render_template('index.html', form=form, task_status=task_status)
 
-@app.route('/start_bruteforce', methods=['POST'])
-def start_bruteforce():
+@app.route('/start_test', methods=['POST'])
+def start_test():
     try:
         # 打印请求数据，帮助调试
         app.logger.info(f"收到的表单数据: {request.form}")
@@ -280,10 +280,10 @@ def start_bruteforce():
         
         app.logger.info(f"准备启动任务: 请求数={num_requests}, 是否异步={config['use_async_mode']}")
         
-        # 在新线程中启动爆破任务
+        # 在新线程中启动测试任务
         try:
             thread = threading.Thread(
-                target=run_bruteforce_task, 
+                target=run_request_test_task, 
                 args=(config, headers, params, data, payloads, num_requests, proxy_list, user_agents)
             )
             thread.daemon = True
@@ -310,7 +310,7 @@ def generate_random_ip():
 
 # 在run_standard_task函数中，修复请求发送逻辑
 def run_standard_task(config, headers, params, data, payloads, num_requests, proxy_list, user_agents):
-    """标准模式执行爆破任务"""
+    """标准模式执行HTTP请求测试任务"""
     try:
         app.logger.info(f"启动标准任务: 请求数={num_requests}")
         
@@ -518,7 +518,7 @@ def run_standard_task(config, headers, params, data, payloads, num_requests, pro
         app.logger.info("标准任务执行结束")
 
 async def run_async_task(config, headers, params, data, payloads, num_requests, proxy_list, user_agents):
-    """异步模式执行爆破任务"""
+    """异步模式执行HTTP请求测试任务"""
     try:
         app.logger.info(f"启动异步任务: 请求数={num_requests}, 并发数={config['concurrency']}")
         
@@ -705,12 +705,12 @@ async def run_async_task(config, headers, params, data, payloads, num_requests, 
         
         app.logger.info("异步任务执行结束")
 
-def run_bruteforce_task(config, headers, params, data, payloads, num_requests, proxy_list, user_agents):
-    """在后台线程中执行爆破任务"""
+def run_request_test_task(config, headers, params, data, payloads, num_requests, proxy_list, user_agents):
+    """在后台线程中执行HTTP请求测试任务"""
     task_thread = None
     
     try:
-        app.logger.info(f"启动爆破任务: 异步模式={config['use_async_mode']}, 请求数={num_requests}")
+        app.logger.info(f"启动HTTP请求测试任务: 异步模式={config['use_async_mode']}, 请求数={num_requests}")
         
         # 使用异步模式
         if config['use_async_mode']:

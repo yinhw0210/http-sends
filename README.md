@@ -1,24 +1,30 @@
-# HTTP模拟请求与IP伪装工具 v2.0
+# HTTP 请求测试工具 v2.0
 
-一个强大的HTTP请求模拟工具，具备高级IP伪装功能，支持配置请求地址、请求方式、请求参数和请求次数。主要用于性能测试、API调试、网络安全测试和服务器负载评估。
+一个强大的HTTP请求测试工具，具备高级网络配置功能，支持配置请求地址、请求方式、请求参数和请求次数。主要用于性能测试、API调试、接口测试和服务器负载评估。
 
 ## 最新特性
 
-- **高级IP伪装功能**：支持代理池、UA轮换和源IP伪造，有效隐藏真实身份和避免请求限制
+- **高级网络配置功能**：支持代理池、UA轮换和源IP设置，有效优化网络请求和避免频率限制
 - **高性能异步模式**：基于asyncio和aiohttp实现的异步协程架构，支持高并发请求，性能提升5-10倍
-- **灵活的HTTP请求模拟**：精确控制HTTP请求的每个方面，包括请求头、参数、数据和方法
+- **灵活的HTTP请求测试**：精确控制HTTP请求的每个方面，包括请求头、参数、数据和方法
 - **可视化WebUI界面**：直观的Web界面操作，实时监控请求状态和结果
 - **完整的代理功能**：支持HTTP/HTTPS/SOCKS代理，可从文件加载代理池并自动轮换
 
 ## 功能特点
 
-- **HTTP请求模拟**：支持多种HTTP请求方法（GET, POST, PUT, DELETE, HEAD, OPTIONS）
-- **IP身份保护**：多层次的IP伪装机制，包括代理服务器、User-Agent轮换和X-Forwarded-For头部控制
+- **HTTP请求测试**：支持多种HTTP请求方法（GET, POST, PUT, DELETE, HEAD, OPTIONS）
+- **网络优化配置**：多层次的网络配置机制，包括代理服务器、User-Agent轮换和X-Forwarded-For头部控制
 - **高性能设计**：支持多线程和异步协程两种并发模式，适应不同场景需求
 - **灵活配置**：支持自定义请求头、URL参数、表单数据和JSON数据
 - **参数化测试**：支持从文件加载测试数据，灵活插入到请求中的任何位置
 - **实时监控**：可视化显示请求进度、成功率、响应时间等关键指标
 - **结果分析**：详细记录请求结果，支持导出为JSON格式进行深入分析
+
+## 界面预览
+
+![HTTP 请求测试工具界面](https://cdn.picui.cn/vip/2025/07/25/68832e4f6c1fa.png)
+
+*现代化的Web界面，支持实时监控请求状态和结果分析*
 
 ## 安装
 
@@ -65,9 +71,9 @@ python run.py --async -u https://example.com -m POST -d '{"password":"PAYLOAD_PL
 python run.py --compare -u https://example.com -n 1000
 ```
 
-### IP伪装功能
+### 网络配置功能
 
-使用代理服务器和UA轮换功能实现IP伪装：
+使用代理服务器和UA轮换功能优化网络请求：
 
 ```bash
 # 使用单个代理
@@ -82,10 +88,10 @@ python run.py --async -u https://example.com --rotate-user-agents
 # 指定自定义User-Agent文件
 python run.py --async -u https://example.com --rotate-user-agents --user-agents-file sample_user_agents.txt
 
-# 伪造源IP地址(X-Forwarded-For)
+# 自定义源IP地址(X-Forwarded-For)
 python run.py --async -u https://example.com --spoof-ip "192.168.1.1"
 
-# 组合使用多种IP伪装技术
+# 组合使用多种网络优化技术
 python run.py --async -u https://example.com --proxy-file sample_proxies.txt --rotate-user-agents --spoof-ip "192.168.1.1"
 ```
 
@@ -120,7 +126,7 @@ python web_ui.py
    - 上传载荷文件或设置请求次数
    - 配置并发线程数、超时时间等参数
 
-4. 点击"开始爆破"按钮开始测试
+4. 点击"开始测试"按钮开始测试
 
 5. 实时查看任务进度和结果统计
 
@@ -205,10 +211,10 @@ python web_ui.py
 工具已包含样本载荷文件、代理列表和User-Agent列表，可以直接用于测试：
 
 ```bash
-# 使用样本载荷进行登录表单爆破(标准模式)
+# 使用样本数据进行登录表单测试(标准模式)
 python run.py -u "https://example.com/login" -m POST -d '{"username":"admin","password":"PAYLOAD_PLACEHOLDER"}' -f sample_payloads.txt -t 5 --delay 0.5
 
-# 使用异步模式和IP伪装功能
+# 使用异步模式和网络优化功能
 python run.py --async -u "https://example.com/login" -m POST -d '{"username":"admin","password":"PAYLOAD_PLACEHOLDER"}' -f sample_payloads.txt -c 50 --proxy-file sample_proxies.txt --rotate-user-agents
 
 # 对比测试两种模式的性能差异
